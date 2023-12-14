@@ -79,7 +79,8 @@ describe 'skopeo::sync' do
     let(:params) do
       {
         src: 'registry.k8s.io',
-        dest: 'local.reg',
+        dest: 'local',
+        dest_type: 'dir',
         by_tag: {
           'pause' => '^3\.(8|9)$'
         },
@@ -104,7 +105,7 @@ describe 'skopeo::sync' do
         )
     }
 
-    cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg >> /var/log/skopeo/skopeo.log 2>&1'
+    cmd = 'skopeo sync --src yaml --dest dir /home/skopeo/registry.yaml local >> /var/log/skopeo/skopeo.log 2>&1'
     it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 end

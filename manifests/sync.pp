@@ -26,6 +26,8 @@
 define skopeo::sync (
   String                   $src,
   String                   $dest,
+  Skopeo::SrcType          $src_type = 'yaml',
+  Skopeo::DestType         $dest_type = 'docker',
   Optional[Skopeo::Matrix] $matrix = undef,
   Skopeo::ByTag            $by_tag = {},
   Boolean                  $tls_verify = true,
@@ -74,7 +76,7 @@ define skopeo::sync (
   }
 
   exec { "skopeo_sync-${title}":
-    command     => "skopeo sync --src yaml --dest docker ${base_dir}/${title}.yaml ${_dest} >> ${log_dir}/skopeo.log 2>&1",
+    command     => "skopeo sync --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest} >> ${log_dir}/skopeo.log 2>&1",
     environment => "XDG_RUNTIME_DIR=/run/user/${skopeo::uid}",
     path        => $facts['path'],
     user        => $user,

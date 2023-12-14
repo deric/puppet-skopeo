@@ -11,7 +11,7 @@ describe 'skopei' do
           sync => {
             'k8s' => {
               src => 'registry.k8s.io',
-              dest => 'local',
+              dest => '/home/skopeo/local',
               matrix => {
                 'images' => ['pause'],
                 'versions' => ['3.8','3.9'],
@@ -29,13 +29,17 @@ describe 'skopei' do
     describe file('/home/skopeo') do
       it { is_expected.to be_directory }
       it { is_expected.to be_readable.by('owner') }
-      it { is_expected.to be_readable.by('group') }
     end
 
     describe file('/home/skopeo/k8s.yaml') do
       it { is_expected.to be_file }
       it { is_expected.to be_readable.by('owner') }
       it { is_expected.to be_readable.by('group') }
+    end
+
+    describe file('/home/skopeo/local') do
+      it { is_expected.to be_directory }
+      it { is_expected.to be_readable.by('owner') }
     end
   end
 end

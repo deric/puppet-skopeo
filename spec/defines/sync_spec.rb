@@ -43,11 +43,8 @@ describe 'skopeo::sync' do
         )
     }
 
-    it {
-      is_expected.to contain_exec('skopeo_sync-registry').with(
-      command: 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg >> /var/log/skopeo/skopeo.log 2>&1',
-    )
-    }
+    cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg >> /var/log/skopeo/skopeo.log 2>&1'
+    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 
   context 'with dest prefix' do
@@ -74,9 +71,8 @@ describe 'skopeo::sync' do
         )
     }
 
-    it { is_expected.to contain_exec('skopeo_sync-registry').with(
-      command: 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1',
-    ) }
+    cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1'
+    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 
   context 'with by tag images' do
@@ -108,8 +104,7 @@ describe 'skopeo::sync' do
         )
     }
 
-    it { is_expected.to contain_exec('skopeo_sync-registry').with(
-      command: 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg >> /var/log/skopeo/skopeo.log 2>&1',
-    ) }
+    cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg >> /var/log/skopeo/skopeo.log 2>&1'
+    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 end

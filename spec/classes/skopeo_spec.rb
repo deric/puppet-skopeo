@@ -45,10 +45,47 @@ describe 'skopeo' do
         )
     }
 
+    cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1'
+    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
+  end
+
+  context 'with matrix' do
+    let(:params) do
+      {
+        sync: {
+          registry: {
+            tls_verify: false,
+            src: 'registry.k8s.io',
+            dest: 'local.reg',
+            dest_prefix: 'k8s.io',
+            matrix: {
+              images: ['pause'],
+              versions: ['3.8', '3.9'],
+            }
+          }
+        }
+      }
+    end
+
+    it { is_expected.to compile.with_all_deps }
+    yaml_config = <<~YAML
+    ---
+    registry.k8s.io:
+      tls-verify: false
+      images:
+        pause:
+        - '3.8'
+        - '3.9'
+    YAML
     it {
-      is_expected.to contain_exec('skopeo_sync-registry').with(
-      command: 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1',
-    )
+      is_expected.to contain_file('/home/skopeo/registry.yaml')
+        .with(
+          ensure: 'file',
+          content: yaml_config,
+        )
     }
+
+    cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1'
+    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 end

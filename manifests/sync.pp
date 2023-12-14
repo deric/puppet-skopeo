@@ -38,7 +38,7 @@ define skopeo::sync (
   $imgs = !empty($matrix) ? {
     # cross product (versions x images)
     true => $matrix['images'].reduce({}) |$res, $img| {
-        merge($res, { $img => $matrix['versions'].map |$val| { $val } })
+      merge($res, { $img => $matrix['versions'].map |$val| { $val } })
     },
     false => {},
   }
@@ -54,7 +54,7 @@ define skopeo::sync (
 
   # final filtered hash
   $config = {
-    $src => $non_empty
+    $src => $non_empty,
   }
 
   file { "${base_dir}/${title}.yaml":

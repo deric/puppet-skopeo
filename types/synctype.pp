@@ -1,8 +1,8 @@
 # Configuration of synchronization targets
 type Skopeo::SyncType = Hash[
-  String, Struct[{
-    src         => String,
-    dest        => String,
-    Optional[dest_prefix] => String,
+  String[1], Struct[{
+    src         => String[1],
+    dest        => String[1],
+    Optional[dest_prefix] => String[1],
   }]
 ]

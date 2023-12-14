@@ -5,10 +5,18 @@
 #   Source registry
 # @param dest
 #   Destination registry
+# @param dest_prefix
+#   Set prefix for destination registry
 # @param matrix
 #   A hash with `images` and `versions` array that will be cross joined
+# @param by_tag
+#  Hash containing image name and version (regexp)
 # @param tls_verify
 #   HTTPS TLS verification
+# @param user
+# @param group
+# @param base_dir
+# @param log_dir
 #
 # @example
 #   skopeo::sync { 'registry':
@@ -16,32 +24,37 @@
 #     dest => 'my.registry',
 #   }
 define skopeo::sync (
-  String $src,
-  String $dest,
+  String                   $src,
+  String                   $dest,
   Optional[Skopeo::Matrix] $matrix = undef,
-  Hash[String, String] $by_tag = {},
-  Boolean $tls_verify = true,
-  String $user = $skopeo::user,
-  String $group = $skopeo::group,
-  Stdlib::Unixpath $base_dir = $skopeo::base_dir,
-  Stdlib::Unixpath $log_dir = $skopeo::log_dir,
-  Optional[String] $dest_prefix = undef,
+  Skopeo::ByTag            $by_tag = {},
+  Boolean                  $tls_verify = true,
+  String                   $user = $skopeo::user,
+  String                   $group = $skopeo::group,
+  Stdlib::Unixpath         $base_dir = $skopeo::base_dir,
+  Stdlib::Unixpath         $log_dir = $skopeo::log_dir,
+  Optional[String]         $dest_prefix = undef,
 ) {
-  $config = {
-    $src => {
-      'tls-verify' => $tls_verify,
+  $imgs = !empty($matrix) ? {
+    # cross product (versions x images)
+    true => $matrix['images'].reduce({}) |$res, $img| {
+        merge($res, { $img => $matrix['versions'].map |$val| { $val } })
     },
+    false => {},
   }
 
-  if $matrix {
-    # cross product (versions x images)
-    $_m = $matrix['images'].reduce({}) |$res, $img| {
-      merge($res, { $img => $matrix['versions'].map |$val| { $val } })
-    }
+  # soon to be YAML
+  $registry = {
+    'tls-verify' => $tls_verify,
+    'images' => $imgs,
+    'images-by-tag-regex' => $by_tag,
+  }
 
-    $_conf = deep_merge($config, { $src => { 'images' => $_m } })
-  } else {
-    $_conf = $config
+  $non_empty = $registry.filter |$keys, $values| { type($values) =~ Type[Boolean] or !empty($values) }
+
+  # final filtered hash
+  $config = {
+    $src => $non_empty
   }
 
   file { "${base_dir}/${title}.yaml":
@@ -50,7 +63,7 @@ define skopeo::sync (
     group   => $group,
     mode    => '0640',
     content => inline_epp('<%= $config.to_yaml %>', {
-        config => $_conf,
+        config => $config,
     }),
     notify  => Exec["skopeo_sync-${title}"],
   }

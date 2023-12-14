@@ -12,15 +12,17 @@
 #   Work dir (home dir) for scopeo configs
 # @param log_dir
 #   Directory for storing logs
+# @param sync
+#   Synchronization config, see examples
 class skopeo (
-  String               $user,
-  String               $group,
-  Boolean              $manage_package,
-  String               $package_ensure,
-  Stdlib::Unixpath     $log_dir,
-  Stdlib::Unixpath     $base_dir,
-  Hash                 $sync = {},
-  Optional[Integer]    $uid = undef,
+  String                     $user,
+  String                     $group,
+  Boolean                    $manage_package,
+  String                     $package_ensure,
+  Stdlib::Unixpath           $log_dir,
+  Stdlib::Unixpath           $base_dir,
+  Skopeo::SyncType           $sync = {},
+  Optional[Integer]          $uid = undef,
 ) {
   contain skopeo::install
   contain skopeo::config

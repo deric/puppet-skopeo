@@ -1,6 +1,14 @@
 # @summary Manage configuration for scopeo sync
 #
 # Sync copies Docker/OCI images from source to destination registry
+# @param src
+#   Source registry
+# @param dest
+#   Destination registry
+# @param matrix
+#   A hash with `images` and `versions` array that will be cross joined
+# @param tls_verify
+#   HTTPS TLS verification
 #
 # @example
 #   skopeo::sync { 'registry':
@@ -10,7 +18,7 @@
 define skopeo::sync (
   String $src,
   String $dest,
-  Hash $matrix = {},
+  Optional[Skopeo::Matrix] $matrix = undef,
   Hash[String, String] $by_tag = {},
   Boolean $tls_verify = true,
   String $user = $skopeo::user,
@@ -25,7 +33,7 @@ define skopeo::sync (
     },
   }
 
-  if !empty($matrix) {
+  if $matrix {
     # cross product (versions x images)
     $_m = $matrix['images'].reduce({}) |$res, $img| {
       merge($res, { $img => $matrix['versions'].map |$val| { $val } })

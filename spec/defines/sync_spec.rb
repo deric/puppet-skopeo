@@ -10,8 +10,6 @@ describe 'skopeo::sync' do
     'include skopeo'
   end
 
-
-
   context 'with defined matrix' do
     let(:params) do
       {
@@ -25,22 +23,23 @@ describe 'skopeo::sync' do
     end
 
     it { is_expected.to compile.with_all_deps }
+    yaml_config = <<~YAML
+    ---
+    registry.k8s.io:
+      tls-verify: true
+      images:
+        kube-apiserver:
+        - 1.27.1
+        - 1.28.2
+        kube-controller-manager:
+        - 1.27.1
+        - 1.28.2
+    YAML
     it {
       is_expected.to contain_file('/home/skopeo/registry.yaml')
         .with(
           ensure: 'file',
-          content: <<~EOS
-          ---
-          registry.k8s.io:
-            tls-verify: true
-            images:
-              kube-apiserver:
-              - 1.27.1
-              - 1.28.2
-              kube-controller-manager:
-              - 1.27.1
-              - 1.28.2
-          EOS
+          content: yaml_config,
         )
     }
 
@@ -61,15 +60,17 @@ describe 'skopeo::sync' do
     end
 
     it { is_expected.to compile.with_all_deps }
+
+    yaml_config = <<~YAML
+    ---
+    registry.k8s.io:
+      tls-verify: true
+    YAML
     it {
       is_expected.to contain_file('/home/skopeo/registry.yaml')
         .with(
           ensure: 'file',
-          content: <<~EOS
-          ---
-          registry.k8s.io:
-            tls-verify: true
-          EOS
+          content: yaml_config,
         )
     }
 

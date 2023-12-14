@@ -32,15 +32,16 @@ describe 'skopeo' do
     end
 
     it { is_expected.to compile.with_all_deps }
+    yaml_config = <<~YAML
+    ---
+    registry.k8s.io:
+      tls-verify: true
+    YAML
     it {
       is_expected.to contain_file('/home/skopeo/registry.yaml')
         .with(
           ensure: 'file',
-          content: <<~EOS
-          ---
-          registry.k8s.io:
-            tls-verify: true
-          EOS
+          content: yaml_config,
         )
     }
 

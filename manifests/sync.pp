@@ -13,7 +13,7 @@
 # @example
 #   skopeo::sync { 'registry':
 #     src  => 'index.docker.io',
-#     desc => 'my.registry',
+#     dest => 'my.registry',
 #   }
 define skopeo::sync (
   String $src,
@@ -70,4 +70,13 @@ define skopeo::sync (
     refreshonly => true,
     require     => [File[$log_dir]],
   }
+
+  # cron { 'sync-k8s':
+  #   ensure  => present,
+  #   command => "skopeo sync --src yaml --dest docker k8s.yml ${dest}/k8s.io",
+  #   user    => $user,
+  #   hour    => '*/4', # in 4 hours intervals
+  #   minute  => '5',
+  #   require => Package['skopeo'],
+  # }
 }

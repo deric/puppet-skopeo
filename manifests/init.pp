@@ -28,13 +28,4 @@ class skopeo (
   contain skopeo::config
 
   create_resources(skopeo::sync, $sync)
-
-  # cron { 'sync-k8s':
-  #   ensure  => present,
-  #   command => "skopeo sync --src yaml --dest docker k8s.yml ${dest}/k8s.io",
-  #   user    => $user,
-  #   hour    => '*/4', # in 4 hours intervals
-  #   minute  => '5',
-  #   require => Package['skopeo'],
-  # }
 }

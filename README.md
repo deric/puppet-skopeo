@@ -24,3 +24,7 @@ skopeo::sync:
         - 1.27.1
         - 1.28.2
 ```
+
+## Configuration
+
+All Puppet variables are documented in [REFERENCE.md](./docs/REFERENCE.md).

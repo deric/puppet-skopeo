@@ -5,4 +5,26 @@
 #
 # See https://github.com/puppetlabs/pdk-templates/blob/main/config_defaults.yml
 # for the default values.
---- {}
+---
+appveyor.yml:
+  delete: true
+.travis.yml:
+  delete: true
+.gitlab-ci.yml:
+  delete: true
+.editorconfig:
+  unmanaged: true
+.gitignore:
+  paths:
+    - '/.vscode/'
+    - '/.devcontainer/'
+    - '.ruby-version'
+spec/spec_helper.rb:
+  coverage_report: true
+Gemfile:
+  optional:
+    ':system_tests':
+      - gem: 'voxpupuli-acceptance'
+    ':release':
+      - gem: 'puppet-blacksmith'
+

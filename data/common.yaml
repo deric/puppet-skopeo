@@ -1,1 +1,7 @@
---- {}
+---
+skopeo::manage_package: true
+skopeo::base_dir: /home/skopeo
+skopeo::log_dir: /var/log/skopeo
+skopeo::user: skopeo
+skopeo::group: skopeo
+skopeo::package_ensure: installed

@@ -3,16 +3,22 @@
 # Sync copies Docker/OCI images from source to destination registry
 # @param src
 #   Source registry
+# @param src_type
+#   Source transport: `docker`,`dir` or `yaml`. Default is `yaml`
 # @param dest
 #   Destination registry
 # @param dest_prefix
 #   Set prefix for destination registry
+# @param dest_type
+#   Destination transport, either `docker` or `dir`. Default: `docker`
 # @param matrix
 #   A hash with `images` and `versions` array that will be cross joined
 # @param by_tag
 #  Hash containing image name and version (regexp)
 # @param tls_verify
 #   HTTPS TLS verification
+# @param redirect_logs
+#   Whether logs should be redirected to a file stored in the `log_dir`
 # @param user
 # @param group
 # @param base_dir
@@ -31,6 +37,7 @@ define skopeo::sync (
   Optional[Skopeo::Matrix] $matrix = undef,
   Skopeo::ByTag            $by_tag = {},
   Boolean                  $tls_verify = true,
+  Boolean                  $redirect_logs = true,
   String                   $user = $skopeo::user,
   String                   $group = $skopeo::group,
   Stdlib::Unixpath         $base_dir = $skopeo::base_dir,
@@ -75,8 +82,13 @@ define skopeo::sync (
     default => "${dest}/${dest_prefix}",
   }
 
+  $_redirect = $redirect_logs ? {
+    true => ">> ${log_dir}/skopeo.log 2>&1",
+    false => '',
+  }
+
   exec { "skopeo_sync-${title}":
-    command     => "skopeo sync --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest} >> ${log_dir}/skopeo.log 2>&1",
+    command     => "skopeo sync --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest} ${_redirect}",
     environment => "XDG_RUNTIME_DIR=/run/user/${skopeo::uid}",
     path        => $facts['path'],
     user        => $user,

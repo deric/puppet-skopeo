@@ -12,6 +12,8 @@ describe 'skopei' do
             'k8s' => {
               src => 'registry.k8s.io',
               dest => '/home/skopeo/local',
+              dest_type => 'dir',
+              redirect_logs => false,
               matrix => {
                 'images' => ['pause'],
                 'versions' => ['3.8','3.9'],

@@ -19,6 +19,8 @@
 #   HTTPS TLS verification
 # @param redirect_logs
 #   Whether logs should be redirected to a file stored in the `log_dir`
+# @param on_change
+#   Whether synchronization should be performed upon config change
 # @param user
 # @param group
 # @param base_dir
@@ -38,6 +40,7 @@ define skopeo::sync (
   Skopeo::ByTag            $by_tag = {},
   Boolean                  $tls_verify = true,
   Boolean                  $redirect_logs = true,
+  Boolean                  $on_change = true,
   String                   $user = $skopeo::user,
   String                   $group = $skopeo::group,
   Stdlib::Unixpath         $base_dir = $skopeo::base_dir,
@@ -74,7 +77,6 @@ define skopeo::sync (
     content => inline_epp('<%= $config.to_yaml %>', {
         config => $config,
     }),
-    notify  => Exec["skopeo_sync-${title}"],
   }
 
   $_dest = $dest_prefix ? {
@@ -83,19 +85,22 @@ define skopeo::sync (
   }
 
   $_redirect = $redirect_logs ? {
-    true => ">> ${log_dir}/skopeo.log 2>&1",
+    true => " >> ${log_dir}/skopeo.log 2>&1",
     false => '',
   }
 
-  exec { "skopeo_sync-${title}":
-    command     => "skopeo sync --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest} ${_redirect}",
-    environment => "XDG_RUNTIME_DIR=/run/user/${skopeo::uid}",
-    path        => $facts['path'],
-    user        => $user,
-    cwd         => $base_dir,
-    provider    => 'shell',
-    refreshonly => true,
-    require     => [File[$log_dir]],
+  if $on_change {
+    exec { "skopeo_sync-${title}":
+      command     => "skopeo sync --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest}${_redirect}",
+      environment => "XDG_RUNTIME_DIR=/run/user/${skopeo::uid}",
+      path        => $facts['path'],
+      user        => $user,
+      cwd         => $base_dir,
+      provider    => 'shell',
+      refreshonly => true,
+      require     => [File[$log_dir]],
+      subscribe   => File["${base_dir}/${title}.yaml"],
+    }
   }
 
   # cron { 'sync-k8s':

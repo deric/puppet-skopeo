@@ -85,6 +85,7 @@ describe 'skopeo::sync' do
           'pause' => '^3\.(8|9)$'
         },
         tls_verify: false,
+        redirect_logs: false,
       }
     end
 
@@ -105,7 +106,7 @@ describe 'skopeo::sync' do
         )
     }
 
-    cmd = 'skopeo sync --src yaml --dest dir /home/skopeo/registry.yaml local >> /var/log/skopeo/skopeo.log 2>&1'
+    cmd = 'skopeo sync --src yaml --dest dir /home/skopeo/registry.yaml local'
     it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 end

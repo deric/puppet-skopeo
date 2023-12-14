@@ -10,6 +10,7 @@ type Skopeo::SyncType = Hash[
     Optional[by_tag]        => Skopeo::ByTag,
     Optional[tls_verify]    => Boolean,
     Optional[redirect_logs] => Boolean,
+    Optional[on_change]     => Boolean,
     Optional[user]          => String,
     Optional[group]         => String,
     Optional[base_dir]      => Stdlib::Unixpath,

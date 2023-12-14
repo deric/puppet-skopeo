@@ -57,11 +57,11 @@ describe 'skopeo' do
             tls_verify: false,
             src: 'registry.k8s.io',
             dest: 'local.reg',
-            dest_prefix: 'k8s.io',
             matrix: {
               images: ['pause'],
               versions: ['3.8', '3.9'],
-            }
+            },
+            on_change: false,
           }
         }
       }
@@ -86,6 +86,6 @@ describe 'skopeo' do
     }
 
     cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1'
-    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
+    it { is_expected.not_to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
 end

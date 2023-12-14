@@ -128,6 +128,7 @@ The following parameters are available in the `skopeo::sync` defined type:
 * [`by_tag`](#by_tag)
 * [`tls_verify`](#tls_verify)
 * [`redirect_logs`](#redirect_logs)
+* [`on_change`](#on_change)
 * [`user`](#user)
 * [`group`](#group)
 * [`base_dir`](#base_dir)
@@ -198,6 +199,14 @@ Default value: ``true``
 Data type: `Boolean`
 
 Whether logs should be redirected to a file stored in the `log_dir`
+
+Default value: ``true``
+
+##### <a name="on_change"></a>`on_change`
+
+Data type: `Boolean`
+
+Whether synchronization should be performed upon config change
 
 Default value: ``true``
 
@@ -286,18 +295,20 @@ Alias of
 
 ```puppet
 Hash[String[1], Struct[{
-    src                   => String[1],
-    dest                  => String[1],
-    Optional[dest_prefix] => String[1],
-    Optional[src_type]    => Skopeo::SrcType,
-    Optional[dest_type]   => Skopeo::DestType,
-    Optional[matrix]      => Skopeo::Matrix,
-    Optional[by_tag]      => Skopeo::ByTag,
-    Optional[tls_verify]  => Boolean,
-    Optional[user]        => String,
-    Optional[group]       => String,
-    Optional[base_dir]    => Stdlib::Unixpath,
-    Optional[log_dir]     => Stdlib::Unixpath,
+    src                     => String[1],
+    dest                    => String[1],
+    Optional[dest_prefix]   => String[1],
+    Optional[src_type]      => Skopeo::SrcType,
+    Optional[dest_type]     => Skopeo::DestType,
+    Optional[matrix]        => Skopeo::Matrix,
+    Optional[by_tag]        => Skopeo::ByTag,
+    Optional[tls_verify]    => Boolean,
+    Optional[redirect_logs] => Boolean,
+    Optional[on_change]     => Boolean,
+    Optional[user]          => String,
+    Optional[group]         => String,
+    Optional[base_dir]      => Stdlib::Unixpath,
+    Optional[log_dir]       => Stdlib::Unixpath,
   }]]
 ```
 

@@ -41,4 +41,4 @@ skopeo::sync:
 
 ## Configuration
 
-All Puppet variables are documented in [REFERENCE.md](./docs/REFERENCE.md).
+All Puppet variables are documented in [REFERENCE.md](./REFERENCE.md).

@@ -2,9 +2,9 @@
   "name": "deric-skopeo",
   "version": "0.1.0",
   "author": "Tomas Barton",
-  "summary": "",
+  "summary": "Synchronize Docker/OCI images between registries",
   "license": "Apache-2.0",
-  "source": "",
+  "source": "https://github.com/deric/puppet-skopeo.git",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",

@@ -14,6 +14,8 @@
 #   Directory for storing logs
 # @param sync
 #   Synchronization config, see examples
+# @param args
+#   Optional arguments as Hash
 class skopeo (
   String                     $user,
   String                     $group,
@@ -22,6 +24,7 @@ class skopeo (
   Stdlib::Unixpath           $log_dir,
   Stdlib::Unixpath           $base_dir,
   Skopeo::SyncType           $sync = {},
+  Skopeo::Args               $args = {},
   Optional[Integer]          $uid = undef,
 ) {
   contain skopeo::install

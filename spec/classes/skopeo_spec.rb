@@ -88,4 +88,45 @@ describe 'skopeo' do
     cmd = 'skopeo sync --src yaml --dest docker /home/skopeo/registry.yaml local.reg/k8s.io >> /var/log/skopeo/skopeo.log 2>&1'
     it { is_expected.not_to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
+
+  context 'with custom args' do
+    let(:params) do
+      {
+        sync: {
+          registry: {
+            src: 'registry.k8s.io',
+            dest: 'local',
+            dest_type: 'dir',
+            redirect_logs: false,
+            by_tag: {
+              pause: '3.8',
+            },
+            args: {
+              'scoped': '',
+             'sign-by': 'foo@bar',
+            },
+          }
+        }
+      }
+    end
+
+    it { is_expected.to compile.with_all_deps }
+    yaml_config = <<~YAML
+    ---
+    registry.k8s.io:
+      tls-verify: true
+      images-by-tag-regex:
+        pause: '3.8'
+    YAML
+    it {
+      is_expected.to contain_file('/home/skopeo/registry.yaml')
+        .with(
+          ensure: 'file',
+          content: yaml_config,
+        )
+    }
+
+    cmd = 'skopeo sync --scoped --sign-by foo@bar --src yaml --dest dir /home/skopeo/registry.yaml local'
+    it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
+  end
 end

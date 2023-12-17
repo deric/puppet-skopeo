@@ -11,6 +11,8 @@
 #   Set prefix for destination registry
 # @param dest_type
 #   Destination transport, either `docker` or `dir`. Default: `docker`
+# @param args
+#   Optional key-value arguments passed to the sync command
 # @param matrix
 #   A hash with `images` and `versions` array that will be cross joined
 # @param by_tag
@@ -36,6 +38,7 @@ define skopeo::sync (
   String                   $dest,
   Skopeo::SrcType          $src_type = 'yaml',
   Skopeo::DestType         $dest_type = 'docker',
+  Skopeo::Args             $args = $skopeo::args,
   Optional[Skopeo::Matrix] $matrix = undef,
   Skopeo::ByTag            $by_tag = {},
   Boolean                  $tls_verify = true,
@@ -89,9 +92,22 @@ define skopeo::sync (
     false => '',
   }
 
+  # optional args
+  $_args = join($args.map |$key, $value| {
+      if $key.length > 1 {
+        if empty($value) {
+          " --${key}"
+        } else {
+          " --${key} ${value}"
+        }
+      } else {
+        " -${key} ${value}" # short args, e.g. -f oci
+      }
+  },'')
+
   if $on_change {
     exec { "skopeo_sync-${title}":
-      command     => "skopeo sync --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest}${_redirect}",
+      command     => "skopeo sync${_args} --src ${src_type} --dest ${dest_type} ${base_dir}/${title}.yaml ${_dest}${_redirect}",
       environment => "XDG_RUNTIME_DIR=/run/user/${skopeo::uid}",
       path        => $facts['path'],
       user        => $user,

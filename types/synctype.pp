@@ -15,5 +15,6 @@ type Skopeo::SyncType = Hash[
     Optional[group]         => String,
     Optional[base_dir]      => Stdlib::Unixpath,
     Optional[log_dir]       => Stdlib::Unixpath,
+    Optional[args]          => Hash[String,String],
   }]
 ]

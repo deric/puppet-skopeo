@@ -1,4 +1,5 @@
 # puppet-skopeo
+[![Puppet Forge](http://img.shields.io/puppetforge/v/deric/skopeo.svg)](https://forge.puppet.com/modules/deric/skopeo)
 [![Tests](https://github.com/deric/puppet-skopeo/actions/workflows/test.yml/badge.svg)](https://github.com/deric/puppet-skopeo/actions/workflows/test.yml)
 
 A module to manage synchronization between Docker/OCI registries.

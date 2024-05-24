@@ -41,6 +41,8 @@ The following parameters are available in the `skopeo` class:
 * [`user`](#-skopeo--user)
 * [`group`](#-skopeo--group)
 * [`manage_package`](#-skopeo--manage_package)
+* [`manage_user`](#-skopeo--manage_user)
+* [`manage_group`](#-skopeo--manage_group)
 * [`package_ensure`](#-skopeo--package_ensure)
 * [`uid`](#-skopeo--uid)
 * [`base_dir`](#-skopeo--base_dir)
@@ -65,6 +67,18 @@ Data type: `String`
 Data type: `Boolean`
 
 Whether package should be installed by this module
+
+##### <a name="-skopeo--manage_user"></a>`manage_user`
+
+Data type: `Boolean`
+
+Whether user should be managed by this module
+
+##### <a name="-skopeo--manage_group"></a>`manage_group`
+
+Data type: `Boolean`
+
+Whether group should be managed by this module
 
 ##### <a name="-skopeo--package_ensure"></a>`package_ensure`
 

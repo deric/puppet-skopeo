@@ -129,4 +129,17 @@ describe 'skopeo' do
     cmd = 'skopeo sync --scoped --sign-by foo@bar --src yaml --dest dir /home/skopeo/registry.yaml local'
     it { is_expected.to contain_exec('skopeo_sync-registry').with(command: cmd) }
   end
+
+  context 'without managed user' do
+    let(:params) do
+      {
+        manage_user: false,
+        manage_group: false
+      }
+    end
+    it { is_expected.to compile.with_all_deps }
+
+    it { is_expected.not_to contain_user('skopeo').with(ensure: 'present') }
+    it { is_expected.not_to contain_group('skopeo').with(ensure: 'present') }
+  end
 end

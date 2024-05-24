@@ -1,5 +1,7 @@
 ---
 skopeo::manage_package: true
+skopeo::manage_user: true
+skopeo::manage_group: true
 skopeo::base_dir: /home/skopeo
 skopeo::log_dir: /var/log/skopeo
 skopeo::user: skopeo

@@ -4,6 +4,10 @@
 # @param group
 # @param manage_package
 #   Whether package should be installed by this module
+# @param manage_user
+#   Whether user should be managed by this module
+# @param manage_group
+#   Whether group should be managed by this module
 # @param package_ensure
 #   `present`, `absent` or specific package version
 # @param uid
@@ -20,6 +24,8 @@ class skopeo (
   String                     $user,
   String                     $group,
   Boolean                    $manage_package,
+  Boolean                    $manage_user,
+  Boolean                    $manage_group,
   String                     $package_ensure,
   Stdlib::Unixpath           $log_dir,
   Stdlib::Unixpath           $base_dir,

@@ -137,6 +137,7 @@ describe 'skopeo' do
         manage_group: false
       }
     end
+
     it { is_expected.to compile.with_all_deps }
 
     it { is_expected.not_to contain_user('skopeo').with(ensure: 'present') }

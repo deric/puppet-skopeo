@@ -77,7 +77,7 @@ define skopeo::sync (
     owner   => $user,
     group   => $group,
     mode    => '0640',
-    content => inline_epp('<%= $config.to_yaml %>', {
+    content => inline_epp('<%= stdlib::to_yaml($config) %>', {
         config => $config,
     }),
   }

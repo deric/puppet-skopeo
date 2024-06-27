@@ -1,6 +1,6 @@
 {
   "name": "deric-skopeo",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Tomas Barton",
   "summary": "Synchronize Docker/OCI images between registries",
   "license": "Apache-2.0",

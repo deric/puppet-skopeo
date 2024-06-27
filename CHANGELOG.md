@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## Release 0.3.2 (2024-06-27)
+
+- Avoid using `stdlib::merge()` use native `+` operator instead
+
 ## Release 0.3.1 (2024-06-25)
 
 - Use prefixed `stdlib::to_yaml`

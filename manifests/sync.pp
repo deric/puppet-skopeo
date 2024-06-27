@@ -53,7 +53,7 @@ define skopeo::sync (
   $imgs = !empty($matrix) ? {
     # cross product (versions x images)
     true => $matrix['images'].reduce({}) |$res, $img| {
-      merge($res, { $img => $matrix['versions'].map |$val| { $val } })
+      $res + { $img => $matrix['versions'].map |$val| { $val } }
     },
     false => {},
   }
